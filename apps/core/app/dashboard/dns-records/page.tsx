@@ -1,51 +1,112 @@
-const  DNSRecordsPage = () => {
-    return (
-        <div className="container mx-auto">
-            <div className="flex flex-col gap-4 mt-4">
-                <div>
-                    <h1 className="text-2xl font-bold"> DNS Records </h1>
-                </div>
-                <div className="flex gap-5">
-                    <div className="flex flex-col gap-5 w-72 h-auto bg-gray-900 rounded-lg p-2 ">
-                        <div className="flex items-center justify-between ">
-                            <div className="p-1">
-                                <p className="text-lg font-normal">Outstanding owed</p>
-                                <a className="text-xs font-light underline "> View sales</a>
-                            </div>
-                            {/* <Infosquareroundedicon /> */}
-                        </div>
-                        <div>
-                            <p className="text-3xl font-bold">$123.00</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-5 w-72 h-auto bg-gray-900 rounded-lg p-2 ">
-                        <div className="flex items-center justify-between ">
-                            <div className="p-1">
-                                <p className="text-lg font-normal">Total payout</p>
-                                <a className="text-xs font-light underline "> View sales</a>
-                            </div>
-                            {/* <Infosquareroundedicon /> */}
-                        </div>
-                        <div>
-                            <p className="text-3xl font-bold">$123.00</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-5 w-72 h-auto bg-gray-900 rounded-lg p-2 ">
-                        <div className="flex items-center justify-between ">
-                            <div className="p-1">
-                                <p className="text-lg font-normal">Product Count</p>
-                                <a className="text-xs font-light underline "> View sales</a>
-                            </div>
-                            {/* <Infosquareroundedicon /> */}
-                        </div>
-                        <div>
-                            <p className="text-3xl font-bold">$123.00</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
+"use client";
+
+import { Button } from "@repo/ui/components/button";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@repo/ui/components/table";
+import { useTheme } from "next-themes";
+
+const invoices = [
+  {
+    invoice: "INV001",
+    paymentStatus: "Paid",
+    totalAmount: "$250.00",
+    paymentMethod: "Credit Card",
+  },
+  {
+    invoice: "INV002",
+    paymentStatus: "Pending",
+    totalAmount: "$150.00",
+    paymentMethod: "PayPal",
+  },
+  {
+    invoice: "INV003",
+    paymentStatus: "Unpaid",
+    totalAmount: "$350.00",
+    paymentMethod: "Bank Transfer",
+  },
+  {
+    invoice: "INV004",
+    paymentStatus: "Paid",
+    totalAmount: "$450.00",
+    paymentMethod: "Credit Card",
+  },
+  {
+    invoice: "INV005",
+    paymentStatus: "Paid",
+    totalAmount: "$550.00",
+    paymentMethod: "PayPal",
+  },
+  {
+    invoice: "INV006",
+    paymentStatus: "Pending",
+    totalAmount: "$200.00",
+    paymentMethod: "Bank Transfer",
+  },
+  {
+    invoice: "INV007",
+    paymentStatus: "Unpaid",
+    totalAmount: "$300.00",
+    paymentMethod: "Credit Card",
+  },
+];
+
+export function TableDemo() {
+  return (
+    <Table>
+      <TableCaption>A list of your recent invoices.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Invoice</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Method</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {invoices.map((invoice) => (
+          <TableRow key={invoice.invoice}>
+            <TableCell className="font-medium">{invoice.invoice}</TableCell>
+            <TableCell>{invoice.paymentStatus}</TableCell>
+            <TableCell>{invoice.paymentMethod}</TableCell>
+            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell colSpan={3}>Total</TableCell>
+          <TableCell className="text-right">$2,500.00</TableCell>
+        </TableRow>
+      </TableFooter>
+    </Table>
+  );
 }
+
+const DNSRecordsPage = () => {
+  const { setTheme, theme } = useTheme();
+
+  return (
+    <div className="container mx-auto">
+      <Button
+        onClick={() => {
+          console.log("theme", theme);
+
+          setTheme(theme === "dark" ? "light" : "dark");
+        }}
+      >
+        New Record
+      </Button>
+      <TableDemo />
+    </div>
+  );
+};
 
 export default DNSRecordsPage;

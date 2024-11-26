@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   AudioWaveform,
   BookOpen,
@@ -8,36 +7,35 @@ import {
   Command,
   Frame,
   GalleryVerticalEnd,
-  LifeBuoy,
   Map,
   PieChart,
-  Send,
   Settings2,
   SquareTerminal,
 } from "lucide-react";
+import * as React from "react";
 
-import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
-import { NavSecondary } from "./nav-secondary";
-import { NavUser } from "./nav-user";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@repo/ui/components/sidebar";
+
+import { NavMain } from "./nav-main";
+import { NavProjects } from "./nav-projects";
+import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
+import NavLogo from "./nav-logo";
+import { Separator } from "@repo/ui/components/separator";
 
 // This is sample data.
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "https://picsum.photos/200/300",
   },
   teams: [
     {
@@ -163,10 +161,15 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { open } = useSidebar();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
+        <NavLogo />
+        <Separator hidden={!open} />
         <TeamSwitcher teams={data.teams} />
+        <Separator hidden={!open} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

@@ -74,7 +74,10 @@
     "./postcss.config": "./postcss.config.mjs",
     "./tailwind.config": "./tailwind.config.ts",
     "./lib/*": "./src/lib/*.ts",
-    "./animations/parallax-scroll-effect": "./src/animations/parallax-scroll-effect.tsx",
+    "./animations/*":[
+      "./src/animations/*.tsx",
+      "./src/animations/*.ts"
+    ],
     "./components/*": [
       "./src/components/ui/*.tsx",
       "./src/components/ui/*.ts",
