@@ -2,6 +2,17 @@
 
 import { Button } from "@repo/ui/components/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@repo/ui/components/dialog";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -12,6 +23,7 @@ import {
   TableRow,
 } from "@repo/ui/components/table";
 import { useTheme } from "next-themes";
+import { CreateDnsModal } from "./_components/create-dns-modal";
 
 const invoices = [
   {
@@ -94,16 +106,28 @@ const DNSRecordsPage = () => {
   const { setTheme, theme } = useTheme();
 
   return (
-    <div className="container mx-auto">
-      <Button
-        onClick={() => {
-          console.log("theme", theme);
+    <div className="py-6">
+      <div className="flex  justify-between items-center gap-1 w-full mb-4">
+        <span>
+          To activate VergeCloud's CDN and DNS services for your domain, you
+          need to transfer your domain's DNS records to VergeCloud's
+        </span>
 
-          setTheme(theme === "dark" ? "light" : "dark");
-        }}
-      >
-        New Record
-      </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              onClick={() => {
+                console.log("theme", theme);
+
+                setTheme(theme === "dark" ? "light" : "dark");
+              }}
+            >
+              New Record
+            </Button>
+          </DialogTrigger>
+          <CreateDnsModal />
+        </Dialog>
+      </div>
       <TableDemo />
     </div>
   );
