@@ -4,6 +4,9 @@ import { postRecordsSchema } from "./post-records.schema";
 // Response
 export type PostRecordsRequest = z.input<typeof postRecordsSchema.request>;
 
+export type PostRecordsRequestType<T extends PostRecordsRequest["type"]> = Extract<PostRecordsRequest, { type: T }>; 
+
+
 export type PostRecordsRequestTransofrmed = z.infer<
   typeof postRecordsSchema.request
 >;

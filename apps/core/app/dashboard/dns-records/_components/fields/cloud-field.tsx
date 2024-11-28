@@ -13,12 +13,12 @@ export const CloudField = (props: CloudFieldProps) => {
   return (
     <div
       className={cn(
-        "transition justify-between items-center gap-2 p-2 rounded-md flex",
+        "transition justify-between items-center gap-3 px-3 py-3 rounded-md flex",
         value ? "bg-card" : "bg-muted",
       )}
     >
       <div>
-        <CloudSwitch onCheckedChange={onChange} />
+        <CloudSwitch checked={value} onCheckedChange={onChange} />
       </div>
       <DialogDescription className="flex-1 text-foreground">
         Using the Cloud option the traffic to your server go through Verge's

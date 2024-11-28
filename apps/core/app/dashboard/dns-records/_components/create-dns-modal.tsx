@@ -21,21 +21,49 @@ import {
 import { Separator } from "@repo/ui/components/separator";
 import { Controller, useForm } from "react-hook-form";
 import { SectionHandler } from "./section-handler";
+import { useEffect } from "react";
 
 export const CreateDnsModal = () => {
+  const form = useForm<PostRecordsRequest>({
+    resolver: zodResolver(postRecordsRequestSchemaTransformed),
+  });
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<PostRecordsRequest>({
-    resolver: zodResolver(postRecordsRequestSchemaTransformed),
-  });
+  } = form;
 
   const type = watch("type");
   const cloud = watch("cloud");
 
-  console.log({ cloud });
+  useEffect(() => {
+    if (cloud) {
+      form.setValue("ttl", -1);
+    }
+  }, [cloud]);
+
+  // console.log({ cloud });
+
+  const handleChangetype = (type: string) => {
+    form.setValue("cloud", false);
+
+    if (type === "A") {
+      form.setValue("value", [
+        {
+          country: "",
+          ip: "",
+          port: null,
+          weight: null,
+        },
+      ]);
+      form.setValue("ip_filter_mode", {
+        count: "single",
+        geo_filter: "none",
+        order: "none",
+      });
+    }
+  };
 
   const onSubmit = (data: PostRecordsRequest) => {
     console.log(data);
@@ -43,7 +71,7 @@ export const CreateDnsModal = () => {
   };
 
   return (
-    <DialogContent className="sm:max-w-[840px]">
+    <DialogContent className="sm:max-w-[840px] max-h-[90vh] overflow-auto">
       <DialogHeader>
         <DialogTitle>Add New Record</DialogTitle>
         <DialogDescription>
@@ -68,7 +96,10 @@ export const CreateDnsModal = () => {
               render={({ field }) => (
                 <Select
                   {...field}
-                  onValueChange={(value) => field.onChange(value)}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleChangetype(value);
+                  }}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select" />
@@ -89,7 +120,7 @@ export const CreateDnsModal = () => {
           </LabelContainer>
 
           <Controller
-            name="value.text"
+            name="name"
             control={control}
             render={({ field, fieldState }) => (
               <LabelContainer
@@ -107,37 +138,58 @@ export const CreateDnsModal = () => {
             )}
           />
 
-          <LabelContainer
-            className="flex-1"
-            label="TTL"
-            error={errors.ttl?.message}
-            required
-          >
-            <Controller
-              name="ttl"
-              control={control}
-              render={({ field }) => (
-                <Select {...field} value={String(field.value)}>
+          <Controller
+            name="ttl"
+            control={control}
+            render={({ field }) => (
+              <LabelContainer
+                className="flex-1"
+                label="TTL"
+                error={errors.ttl?.message}
+                required
+              >
+                <Select
+                  disabled={cloud}
+                  {...field}
+                  value={field.value ? String(field.value) : ""}
+                  onValueChange={(value) => field.onChange(+value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="60">60</SelectItem>
-                    <SelectItem value="300">300</SelectItem>
-                    <SelectItem value="3600">3600</SelectItem>
+                    {/* TODO: Check Auto Option with Owner */}
+                    <SelectItem value="-1">Auto</SelectItem>
+                    <SelectItem value="120">2 minutes</SelectItem>
+                    <SelectItem value="180">3 minutes</SelectItem>
+                    <SelectItem value="300">5 minutes</SelectItem>
+                    <SelectItem value="600">10 minutes</SelectItem>
+                    <SelectItem value="900">15 minutes</SelectItem>
+                    <SelectItem value="1800">30 minutes</SelectItem>
+                    <SelectItem value="3600">1 hour</SelectItem>
+                    <SelectItem value="7200">2 hours</SelectItem>
+                    <SelectItem value="18000">5 hours</SelectItem>
+                    <SelectItem value="43200">12 hours</SelectItem>
+                    <SelectItem value="86400">1 day</SelectItem>
+                    <SelectItem value="172800">2 days</SelectItem>
+                    <SelectItem value="432000">3 days</SelectItem>
                   </SelectContent>
                 </Select>
-              )}
-            />
-          </LabelContainer>
+              </LabelContainer>
+            )}
+          />
         </div>
 
-        <SectionHandler control={control} type={type} />
+        <SectionHandler control={control} form={form} type={type} />
       </div>
 
       <DialogFooter>
+        {/* Cencel Button */}
+        <Button type="button" variant="ghost">
+          Cancel
+        </Button>
         <Button type="button" onClick={handleSubmit(onSubmit)}>
-          Save changes
+          Save
         </Button>
       </DialogFooter>
     </DialogContent>

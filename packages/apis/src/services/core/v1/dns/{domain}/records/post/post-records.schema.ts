@@ -1,9 +1,26 @@
 import { z } from "zod";
 
+const IPSchema = z.object({
+  country: z.string().nullable().optional(), // Country is string or null
+  ip: z
+    .string()
+    .regex(
+      /^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$/,
+      "Invalid IPv4 address",
+    ),
+  port: z.number().int().min(1).max(65535).nullable().optional(), // Port is an integer or null
+  weight: z
+    .number({ message: "Weight must number" })
+    .int()
+    .min(0)
+    .max(1000)
+    .nullable(), // Weight is an integer or null
+});
+
 const baseSchema = z.object({
   cloud: z.boolean().optional(),
   ip_filter_mode: z.object({
-    country: z.string(),
+    count: z.string(),
     geo_filter: z.string(),
     order: z.string(),
   }),
@@ -14,16 +31,7 @@ const baseSchema = z.object({
 
 const typeASchema = baseSchema.extend({
   type: z.literal("A"),
-  value: z.object({
-    country: z.string().nullable(),
-    ip: z
-      .string()
-      .regex(
-        /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
-      ),
-    port: z.number().nullable(),
-    weight: z.number().nullable(),
-  }),
+  value: z.array(IPSchema),
 });
 
 const typeCNAMESchema = baseSchema.extend({
@@ -108,7 +116,7 @@ export const postRecordsRequestSchemaTransformed = z
     typeMXchema,
     typeTXTchema,
     typeTLSAschema,
-    typeSRVschema
+    typeSRVschema,
   ])
   .transform((data) => {
     return data;
