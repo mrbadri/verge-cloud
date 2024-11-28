@@ -1,16 +1,15 @@
-import { z } from "zod"; 
+import { z } from "zod";
 
 const baseSchema = z.object({
-  keyPayload: z.string(),
-  cloud: z.string(),
-  upstream_https: z.boolean(),
-  name: z.string(),
-  ttl: z.number(),
+  cloud: z.boolean().optional(),
   ip_filter_mode: z.object({
     country: z.string(),
     geo_filter: z.string(),
     order: z.string(),
   }),
+  name: z.string(),
+  ttl: z.number(),
+  upstream_https: z.string().optional(),
 });
 
 const typeASchema = baseSchema.extend({
@@ -46,22 +45,13 @@ const typeNSchema = baseSchema.extend({
 const typeMXchema = baseSchema.extend({
   type: z.literal("MX"),
   value: z.object({
-    port: z.union([
-      z.number().int().min(1).max(65535),
-      z.null(),
-    ]),
-    priority: z.union([
-      z.number().int().min(0).max(9999),
-      z.null(),
-    ]),
+    port: z.union([z.number().int().min(1).max(65535), z.null()]),
+    priority: z.union([z.number().int().min(0).max(9999), z.null()]),
     target: z
       .string()
       .max(500)
       .regex(/^([a-zA-Z0-9._-])+$/, "Invalid hostname format"),
-    weight: z.union([
-      z.number().int().min(0).max(1000),
-      z.null(),
-    ]),
+    weight: z.union([z.number().int().min(0).max(1000), z.null()]),
   }),
 });
 
@@ -76,10 +66,9 @@ const typeCAAschema = baseSchema.extend({
   type: z.literal("CAA"),
   value: z.object({
     tag: z.enum(["issuewild", "issue", "iodef"]),
-    value: z.string().regex(
-      /^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
-      "Invalid domain format",
-    ),
+    value: z
+      .string()
+      .regex(/^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/, "Invalid domain format"),
   }),
 });
 
@@ -87,11 +76,26 @@ const typeTLSAschema = baseSchema.extend({
   type: z.literal("TLSA"),
   value: z.object({
     certificate: z.string(),
-    matching_type: z
-      .string()
-      .max(255),
+    matching_type: z.string().max(255),
     selector: z.string().max(255),
     usage: z.string().max(255),
+  }),
+});
+
+const typeSRVschema = baseSchema.extend({
+  type: z.literal("SRV"),
+  value: z.object({
+    port: z.number().int().nullable().optional(),
+
+    priority: z.number().int().nullable().optional(),
+
+    target: z
+      .string()
+      .min(1)
+      .max(500)
+      .regex(/^([a-zA-Z0-9._-])+$/),
+
+    weight: z.number().int().nullable().optional(),
   }),
 });
 
@@ -104,6 +108,7 @@ export const postRecordsRequestSchemaTransformed = z
     typeMXchema,
     typeTXTchema,
     typeTLSAschema,
+    typeSRVschema
   ])
   .transform((data) => {
     return data;

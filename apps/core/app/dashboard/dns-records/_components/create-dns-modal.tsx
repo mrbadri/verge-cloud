@@ -1,3 +1,6 @@
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { BaseInput } from "@repo/ui/components/base-input";
 import { Button } from "@repo/ui/components/button";
 import {
@@ -17,92 +20,132 @@ import {
 } from "@repo/ui/components/select";
 import { Separator } from "@repo/ui/components/separator";
 import { CircleAlert } from "lucide-react";
+import { postRecordsRequestSchemaTransformed } from "@repo/apis/core/v1/dns/{domain}/records/post/post-records.schema";
+import { PostRecordsRequest } from "@repo/apis/core/v1/dns/{domain}/records/post/post-records.types";
+import { SectionA } from "./section-type-base/section-A";
 
 export const CreateDnsModal = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PostRecordsRequest>({
+    resolver: zodResolver(postRecordsRequestSchemaTransformed),
+  });
+
+
+  const onSubmit = (data: PostRecordsRequest) => {
+    console.log(data);
+    // handle your form submission here
+  };
+
   return (
     <DialogContent className="sm:max-w-[840px]">
       <DialogHeader>
-        <DialogTitle>Add New Record </DialogTitle>
+        <DialogTitle>Add New Record</DialogTitle>
         <DialogDescription>
           To activate VergeCloud's CDN and DNS services for your domain, you
-          need to transfer your domain's DNS records to VergeCloud's
+          need to transfer your domain's DNS records to VergeCloud's.
         </DialogDescription>
       </DialogHeader>
 
       <Separator />
 
-      {/* Section One */}
       <div className="flex flex-col py-2 gap-4">
-        <div className="flex gap-4 ">
-          {/* Record Type */}
+        <div className="flex gap-4">
           <LabelContainer
             className="flex-1"
             label="Type"
-            error="This field is required"
+            error={errors.type?.message}
             required
           >
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="A">A</SelectItem>
-                <SelectItem value="NS">NS</SelectItem>
-                <SelectItem value="CNAME">NS</SelectItem>
-                <SelectItem value="MX">MX</SelectItem>
-                <SelectItem value="SRV">SRV</SelectItem>
-                <SelectItem value="TXT">TXT</SelectItem>
-                <SelectItem value="CAA">CAA</SelectItem>
-                <SelectItem value="TLSA">TLSA</SelectItem>
-              </SelectContent>
-            </Select>
+            <Controller
+              name="type"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  onValueChange={(value) => field.onChange(value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="A">A</SelectItem>
+                    <SelectItem value="NS">NS</SelectItem>
+                    <SelectItem value="CNAME">CNAME</SelectItem>
+                    <SelectItem value="MX">MX</SelectItem>
+                    <SelectItem value="SRV">SRV</SelectItem>
+                    <SelectItem value="TXT">TXT</SelectItem>
+                    <SelectItem value="CAA">CAA</SelectItem>
+                    <SelectItem value="TLSA">TLSA</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </LabelContainer>
 
-          {/* Name */}
+          <Controller
+            name="value.text"
+            control={control}
+            render={({ field, fieldState }) => (
+              <LabelContainer
+                className="flex-1 relative flex-grow-[2]"
+                label="Name"
+                error={fieldState.error?.message}
+              >
+                <div className="relative">
+                  <BaseInput {...field} placeholder="Subdomain or @ for Root" />
+                  <span className="absolute right-1.5 bg-primary-100 text-primary-800 py-1.5 px-3 rounded top-1/2 -translate-y-1/2 text-xs">
+                    .com
+                  </span>
+                </div>
+              </LabelContainer>
+            )}
+          />
+
           <LabelContainer
-            className="flex-1 relative flex-grow-[2]"
-            label="Name"
+            className="flex-1"
+            label="TTL"
+            error={errors.ttl?.message}
+            required
           >
-            <BaseInput placeholder="Subdomain or @ for Root" />
-            <span className="absolute right-1.5 bg-primary-100 text-primary-800 py-1.5 px-3 rounded top-1/2 -translate-y-1/2 text-xs">
-              .com
-            </span>
-          </LabelContainer>
-
-          {/* Record Type */}
-          <LabelContainer className="flex-1" label="TTL" required>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="A">A</SelectItem>
-                <SelectItem value="NS">NS</SelectItem>
-                <SelectItem value="CNAME">NS</SelectItem>
-                <SelectItem value="MX">MX</SelectItem>
-                <SelectItem value="SRV">SRV</SelectItem>
-                <SelectItem value="TXT">TXT</SelectItem>
-                <SelectItem value="CAA">CAA</SelectItem>
-                <SelectItem value="TLSA">TLSA</SelectItem>
-              </SelectContent>
-            </Select>
+            <Controller
+              name="ttl"
+              control={control}
+              render={({ field }) => (
+                <Select {...field} value={String(field.value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="60">60</SelectItem>
+                    <SelectItem value="300">300</SelectItem>
+                    <SelectItem value="3600">3600</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </LabelContainer>
         </div>
 
-        <div className="flex gap-2 ">
+        <div className="flex gap-2">
           <CircleAlert size={24} className="text-gray-400 self-center" />
           <DialogDescription>
             TLSA Record: The TLS Authentication record (TLSA) is used to
             associate a TLS server certificate or public key with the domain
-            name where the record is found
+            name where the record is found.
           </DialogDescription>
         </div>
+
+        <SectionA control={control}/>
       </div>
 
-      <Separator />
 
       <DialogFooter>
-        <Button type="submit">Save changes</Button>
+        <Button type="button" onClick={handleSubmit(onSubmit)}>
+          Save changes
+        </Button>
       </DialogFooter>
     </DialogContent>
   );

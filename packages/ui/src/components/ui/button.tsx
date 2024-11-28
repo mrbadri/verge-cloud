@@ -68,3 +68,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 export { Button, buttonVariants };
+
+
+//     background-color: hsl(249, 78%, 58% / 0.9);
+//     background-color: hsl(var(--primary) / 0.9);
