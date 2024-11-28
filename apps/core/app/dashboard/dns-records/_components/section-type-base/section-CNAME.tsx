@@ -3,15 +3,17 @@ import LabelInfo from "~/app/dashboard/_compnents/label-info";
 import { CloudField } from "../fields/cloud-field";
 import { SectionNewRecordProps } from "../section-handler";
 
-export const SectionA = (props: SectionNewRecordProps) => {
+
+
+export const SectionCNAME = (props: SectionNewRecordProps) => {
   const { control } = props;
 
   return (
     <div className="flex flex-col py-2 gap-4">
       <LabelInfo>
-        A======= TLSA Record: The TLS Authentication record (TLSA) is used to associate a
-        TLS server certificate or public key with the domain name where the
-        record is found.
+        CNAME ======================= TLSA Record: The TLS Authentication record (TLSA) is used to
+        associate a TLS server certificate or public key with the domain name
+        where the record is found.
       </LabelInfo>
 
       <Controller

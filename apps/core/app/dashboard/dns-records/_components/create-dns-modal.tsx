@@ -1,6 +1,6 @@
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { postRecordsRequestSchemaTransformed } from "@repo/apis/core/v1/dns/{domain}/records/post/post-records.schema";
+import { PostRecordsRequest } from "@repo/apis/core/v1/dns/{domain}/records/post/post-records.types";
 import { BaseInput } from "@repo/ui/components/base-input";
 import { Button } from "@repo/ui/components/button";
 import {
@@ -19,20 +19,23 @@ import {
   SelectValue,
 } from "@repo/ui/components/select";
 import { Separator } from "@repo/ui/components/separator";
-import { CircleAlert } from "lucide-react";
-import { postRecordsRequestSchemaTransformed } from "@repo/apis/core/v1/dns/{domain}/records/post/post-records.schema";
-import { PostRecordsRequest } from "@repo/apis/core/v1/dns/{domain}/records/post/post-records.types";
-import { SectionA } from "./section-type-base/section-A";
+import { Controller, useForm } from "react-hook-form";
+import { SectionHandler } from "./section-handler";
 
 export const CreateDnsModal = () => {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<PostRecordsRequest>({
     resolver: zodResolver(postRecordsRequestSchemaTransformed),
   });
 
+  const type = watch("type");
+  const cloud = watch("cloud");
+
+  console.log({ cloud });
 
   const onSubmit = (data: PostRecordsRequest) => {
     console.log(data);
@@ -129,18 +132,8 @@ export const CreateDnsModal = () => {
           </LabelContainer>
         </div>
 
-        <div className="flex gap-2">
-          <CircleAlert size={24} className="text-gray-400 self-center" />
-          <DialogDescription>
-            TLSA Record: The TLS Authentication record (TLSA) is used to
-            associate a TLS server certificate or public key with the domain
-            name where the record is found.
-          </DialogDescription>
-        </div>
-
-        <SectionA control={control}/>
+        <SectionHandler control={control} type={type} />
       </div>
-
 
       <DialogFooter>
         <Button type="button" onClick={handleSubmit(onSubmit)}>
