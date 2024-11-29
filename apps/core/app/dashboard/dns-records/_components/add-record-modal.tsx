@@ -27,11 +27,11 @@ import { SectionHandler } from "./section-handler";
 import { useQueryClient } from "@repo/apis/providers/api-provider";
 import { getRecordsQueryKey } from "@repo/apis/core/v1/dns/{domain}/records/get/use-get-records";
 
-export interface CreateDnsModalProps {
+export interface AddRecordModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
-export const CreateDnsModal = (props: CreateDnsModalProps) => {
+export const AddRecordModal = (props: AddRecordModalProps) => {
   const { setOpen } = props;
 
   const form = useForm<PostRecordsRequest>({

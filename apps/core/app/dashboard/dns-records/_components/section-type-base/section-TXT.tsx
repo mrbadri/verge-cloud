@@ -12,7 +12,8 @@ export const SectionTXT = (props: SectionNewRecordProps<"TXT">) => {
   return (
     <div className="flex flex-col py-2 gap-4">
       <LabelInfo>
-        SRV Record: It is used to import values related to the application.
+        TXT Record: It is used to authenticating email senders and acme
+        challenges.
       </LabelInfo>
 
       <Separator />
@@ -24,10 +25,7 @@ export const SectionTXT = (props: SectionNewRecordProps<"TXT">) => {
             control={control}
             name={"value.text"}
             render={({ field, fieldState }) => (
-              <LabelContainer
-                error={fieldState.error?.message}
-                label="Content"
-              >
+              <LabelContainer error={fieldState.error?.message} label="Content">
                 <Textarea
                   placeholder="e.g., v=spf1 include:_spf.example.com all"
                   {...field}

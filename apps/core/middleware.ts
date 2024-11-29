@@ -15,9 +15,9 @@ export function middleware(request: NextRequest) {
 
   // // Redirect to login if unauthenticated
   // if (!accessToken || !refreshToken) {
-  //   return NextResponse.redirect(new URL("/auth/login", request.url));
-  // }
-
+    // }
+    // TODO: Redirect to main Page for Demo
+    // return NextResponse.redirect(new URL("/dashboard/dns-records", request.url));
   // Allow access to protected routes if authenticated
   return NextResponse.next();
 }

@@ -3,6 +3,7 @@
 import { useGetRecords } from "@repo/apis/core/v1/dns/{domain}/records/get/use-get-records";
 import { BaseInput } from "@repo/ui/components/base-input";
 import { Button } from "@repo/ui/components/button";
+import { CloudSwitch } from "@repo/ui/components/cloudSwitch";
 import { Separator } from "@repo/ui/components/separator";
 import {
   Table,
@@ -12,11 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/ui/components/table";
-import { Search, SlidersHorizontal } from "lucide-react";
-import { BaseCard } from "../../_components/base-card";
-import { CloudSwitch } from "@repo/ui/components/cloudSwitch";
-import { Skeleton } from "@repo/ui/components/skeleton";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Search, SlidersHorizontal, Trash2 } from "lucide-react";
+import { BaseCard } from "../../../_components/base-card";
+import { RecordListLoading } from "./record-list.loading";
 
 const DisplayObjects: React.FC<any> = ({ data }) => {
   const dataArray = Array.isArray(data) ? data : [data];
@@ -63,35 +62,6 @@ const handleTtlShow = (ttl: string): string => {
   return parts.join(" ") || "0 seconds";
 };
 
-const TableSkeleton = () => {
-  return (
-    <>
-      {[1, 2, 3, 5, 6, 7, 9, 10]?.map((item) => (
-        <TableRow key={item}>
-          <TableCell>
-            <Skeleton className="w-full h-8 rounded-md bg-border" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-full h-8 rounded-md bg-border" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-full h-8 rounded-md bg-border" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-full h-8 rounded-md bg-border" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-[100px] h-8 rounded-md bg-border" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="w-full h-8 rounded-md bg-border" />
-          </TableCell>
-        </TableRow>
-      ))}
-    </>
-  );
-};
-
 export const RecordsList = () => {
   const query = useGetRecords({
     params: {
@@ -131,6 +101,7 @@ export const RecordsList = () => {
         </div>
       </div>
 
+      {/* Table */}
       <Table>
         <TableHeader className="bg-border py-4 rounded-full">
           <TableRow>
@@ -146,7 +117,7 @@ export const RecordsList = () => {
         </TableHeader>
         <TableBody>
           {query.isPending ? (
-            <TableSkeleton />
+            <RecordListLoading />
           ) : (
             <>
               {query.data?.data.data?.map((item) => (

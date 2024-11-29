@@ -11,7 +11,8 @@ export const SectionNS = (props: SectionNewRecordProps<"NS">) => {
   return (
     <div className="flex flex-col py-2 gap-4">
       <LabelInfo>
-        SRV Record: It is used to import values related to the application.
+        NS Record: The NS record indicates which DNS server is authoritative for
+        that domain
       </LabelInfo>
 
       <Separator />

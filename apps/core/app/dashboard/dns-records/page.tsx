@@ -3,8 +3,8 @@
 import { Button } from "@repo/ui/components/button";
 import { Dialog, DialogTrigger } from "@repo/ui/components/dialog";
 import { useState } from "react";
-import { CreateDnsModal } from "./_components/create-dns-modal";
-import { RecordsList } from "./_components/records-list";
+import { AddRecordModal } from "./_components/add-record-modal";
+import { RecordsList } from "./_components/record-list/records-list";
 
 const DNSRecordsPage = () => {
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ const DNSRecordsPage = () => {
           <DialogTrigger asChild>
             <Button>New Record</Button>
           </DialogTrigger>
-          <CreateDnsModal open={open} setOpen={setOpen} />
+          <AddRecordModal open={open} setOpen={setOpen} />
         </Dialog>
       </div>
 

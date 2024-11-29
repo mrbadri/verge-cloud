@@ -11,7 +11,9 @@ export const SectionMX = (props: SectionNewRecordProps<"MX">) => {
   return (
     <div className="flex flex-col py-2 gap-4">
       <LabelInfo>
-        SRV Record: It is used to import values related to the application.
+        MX Record: You can select the domain name of your email servers using
+        this record. In case you have more than one server, you can set
+        priorities for each.
       </LabelInfo>
 
       <Separator />
