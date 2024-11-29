@@ -1,5 +1,5 @@
 import { Controller } from "react-hook-form";
-import LabelInfo from "~/app/dashboard/_compnents/label-info";
+import LabelInfo from "~/app/dashboard/_components/label-info";
 import { CloudField } from "../fields/cloud-field";
 import { SectionNewRecordProps } from "../section-handler";
 import { UpstreamHttpsField } from "../fields/upstream-https-field";

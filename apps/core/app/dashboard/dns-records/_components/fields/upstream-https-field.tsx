@@ -9,7 +9,7 @@ import {
 import {
   BaseCard,
   BaseCardFieldContainer,
-} from "~/app/dashboard/_compnents/base-card";
+} from "~/app/dashboard/_components/base-card";
 
 export interface UpstreamHttpsFieldProps {
   onChange: (value: string) => void;

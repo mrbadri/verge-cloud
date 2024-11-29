@@ -11,7 +11,7 @@ import { Controller } from "react-hook-form";
 import {
   BaseCard,
   BaseCardFieldContainer,
-} from "~/app/dashboard/_compnents/base-card";
+} from "~/app/dashboard/_components/base-card";
 import { SectionNewRecordProps } from "../section-handler";
 
 // export interface UpstreamHttpsFieldProps {

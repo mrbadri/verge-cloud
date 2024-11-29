@@ -2,7 +2,7 @@ import { BaseInput } from "@repo/ui/components/base-input";
 import { LabelContainer } from "@repo/ui/components/labelContainer";
 import { Separator } from "@repo/ui/components/separator";
 import { Controller } from "react-hook-form";
-import LabelInfo from "~/app/dashboard/_compnents/label-info";
+import LabelInfo from "~/app/dashboard/_components/label-info";
 import { SectionNewRecordProps } from "../section-handler";
 
 export const SectionSRV = (props: SectionNewRecordProps<"SRV">) => {
