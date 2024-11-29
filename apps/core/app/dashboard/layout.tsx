@@ -1,5 +1,5 @@
 import React from "react";
-import { AppSidebar } from "./_components/app-sibebar"; 
+import { AppSidebar } from "./_components/app-sibebar";
 
 import {
   Breadcrumb,
@@ -7,7 +7,6 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
 } from "@repo/ui/components/breadcrumb";
 import { Separator } from "@repo/ui/components/separator";
 import {
@@ -15,6 +14,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@repo/ui/components/sidebar";
+
+import { ModeToggle } from "@repo/ui/components/modeToggle";
 
 export default function DashboardLayout({
   children,
@@ -26,7 +27,7 @@ export default function DashboardLayout({
       <AppSidebar />
       <SidebarInset>
         {/* TODO: Handle Dynamic Breadcrumb */}
-        <header className="flex h-16 shrink-0 items-center gap-2">
+        <header className="flex h-16 shrink-0 items-center justify-between pr-4 gap-2">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -42,6 +43,8 @@ export default function DashboardLayout({
               </BreadcrumbList>
             </Breadcrumb>
           </div>
+
+          <ModeToggle />
         </header>
 
         <div className="px-4">
@@ -52,10 +55,4 @@ export default function DashboardLayout({
       </SidebarInset>
     </SidebarProvider>
   );
-  // return (
-  //   <div className="flex h-full">
-  //     <SideBarDashboard />
-  //     <div className="flex-1">{children}</div>
-  //   </div>
-  // );
 }
