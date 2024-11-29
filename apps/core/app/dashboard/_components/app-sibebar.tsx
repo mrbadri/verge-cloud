@@ -33,7 +33,7 @@ import { Separator } from "@repo/ui/components/separator";
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
+    name: "Admin",
     email: "m@example.com",
     avatar: "https://picsum.photos/200/300",
   },
@@ -56,10 +56,10 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
+      title: "Smart Scanner",
       url: "#",
       icon: SquareTerminal,
-      isActive: true,
+      // isActive: true,
       items: [
         {
           title: "History",
@@ -76,9 +76,9 @@ const data = {
       ],
     },
     {
-      title: "Models",
+      title: "Analytics & Logs",
       url: "#",
-      icon: Bot,
+      icon: PieChart,
       items: [
         {
           title: "Genesis",
@@ -95,30 +95,18 @@ const data = {
       ],
     },
     {
-      title: "Documentation",
+      title: "DNS Records",
       url: "#",
       icon: BookOpen,
       items: [
         {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
+          title: "Add Records",
           url: "#",
         },
       ],
     },
     {
-      title: "Settings",
+      title: "SSL/TLS",
       url: "#",
       icon: Settings2,
       items: [
@@ -141,23 +129,7 @@ const data = {
       ],
     },
   ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
+  projects: [],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -173,7 +145,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
