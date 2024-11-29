@@ -3,15 +3,8 @@
 import { Button } from "@repo/ui/components/button";
 import {
   Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@repo/ui/components/dialog";
-import { Input } from "@repo/ui/components/input";
-import { Label } from "@repo/ui/components/label";
 import {
   Table,
   TableBody,
@@ -23,6 +16,7 @@ import {
   TableRow,
 } from "@repo/ui/components/table";
 import { useTheme } from "next-themes";
+import { useState } from "react";
 import { CreateDnsModal } from "./_components/create-dns-modal";
 
 const invoices = [
@@ -104,6 +98,7 @@ export function TableDemo() {
 
 const DNSRecordsPage = () => {
   const { setTheme, theme } = useTheme();
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="py-6">
@@ -113,19 +108,17 @@ const DNSRecordsPage = () => {
           need to transfer your domain's DNS records to VergeCloud's
         </span>
 
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen} >
           <DialogTrigger asChild>
             <Button
               onClick={() => {
-                console.log("theme", theme);
-
                 setTheme(theme === "dark" ? "light" : "dark");
               }}
             >
               New Record
             </Button>
           </DialogTrigger>
-          <CreateDnsModal />
+          <CreateDnsModal open={open} setOpen={setOpen} />
         </Dialog>
       </div>
       <TableDemo />

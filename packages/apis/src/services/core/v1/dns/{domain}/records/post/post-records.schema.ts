@@ -19,11 +19,13 @@ const IPSchema = z.object({
 
 const baseSchema = z.object({
   cloud: z.boolean().optional(),
-  ip_filter_mode: z.object({
-    count: z.string(),
-    geo_filter: z.string(),
-    order: z.string(),
-  }),
+  ip_filter_mode: z
+    .object({
+      count: z.string(),
+      geo_filter: z.string(),
+      order: z.string(),
+    })
+    .optional(),
   name: z.string(),
   ttl: z.number(),
   upstream_https: z.string().optional(),
@@ -53,13 +55,8 @@ const typeNSchema = baseSchema.extend({
 const typeMXchema = baseSchema.extend({
   type: z.literal("MX"),
   value: z.object({
-    port: z.union([z.number().int().min(1).max(65535), z.null()]),
-    priority: z.union([z.number().int().min(0).max(9999), z.null()]),
-    target: z
-      .string()
-      .max(500)
-      .regex(/^([a-zA-Z0-9._-])+$/, "Invalid hostname format"),
-    weight: z.union([z.number().int().min(0).max(1000), z.null()]),
+    host: z.string(),
+    priority: z.number().int().min(0).max(9999),
   }),
 });
 
@@ -93,16 +90,13 @@ const typeTLSAschema = baseSchema.extend({
 const typeSRVschema = baseSchema.extend({
   type: z.literal("SRV"),
   value: z.object({
-    port: z.number().int().nullable().optional(),
-
-    priority: z.number().int().nullable().optional(),
-
     target: z
       .string()
       .min(1)
       .max(500)
       .regex(/^([a-zA-Z0-9._-])+$/),
-
+    port: z.number().int().nullable(),
+    priority: z.number().int().nullable().optional(),
     weight: z.number().int().nullable().optional(),
   }),
 });

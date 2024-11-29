@@ -117,6 +117,7 @@ export const IpListField = (props: IpListFieldProps) => {
                         placeholder={portPlaceholder}
                         {...field}
                         value={field.value ? String(field.value) : ""}
+                        onChange={(e) => field.onChange(+e.target.value)} 
                       />
                     </LabelContainer>
                   )}

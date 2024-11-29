@@ -3,7 +3,7 @@ export interface DelayProps<T> {
   data: T;
 }
 
-const DEFAULT_TIMEOUT = 3000;
+const DEFAULT_TIMEOUT = 4000;
 
 export const randomTimeout = (time: number) => Math.floor(Math.random() * time);
 

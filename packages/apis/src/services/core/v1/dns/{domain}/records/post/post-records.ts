@@ -19,9 +19,13 @@ export const postRecords = async (
   // TODO: Get Domain from props
   const URL = postRecordsURL("test.com");
 
+  // TODO: Remove mock after connect API
   const response = await requestHandler(
     () => coreApi.post(URL, payloadParsed),
     schema.response._def.schema,
+    {
+      isMock: true,
+    },
   );
 
   const dataParsed = schema.response.parse(response.data);

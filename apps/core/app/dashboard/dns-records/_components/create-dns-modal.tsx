@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postRecordsRequestSchemaTransformed } from "@repo/apis/core/v1/dns/{domain}/records/post/post-records.schema";
 import { PostRecordsRequest } from "@repo/apis/core/v1/dns/{domain}/records/post/post-records.types";
+import { UsePostRecords } from "@repo/apis/core/v1/dns/{domain}/records/post/use-post-records";
 import { BaseInput } from "@repo/ui/components/base-input";
 import { Button } from "@repo/ui/components/button";
 import {
@@ -19,12 +20,18 @@ import {
   SelectValue,
 } from "@repo/ui/components/select";
 import { Separator } from "@repo/ui/components/separator";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { SectionHandler } from "./section-handler";
-import { useEffect } from "react";
-import { UsePostRecords } from "@repo/apis/core/v1/dns/{domain}/records/post/use-post-records";
 
-export const CreateDnsModal = () => {
+export interface CreateDnsModalProps {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+export const CreateDnsModal = (props: CreateDnsModalProps) => {
+  const { setOpen } = props;
+
   const form = useForm<PostRecordsRequest>({
     resolver: zodResolver(postRecordsRequestSchemaTransformed),
   });
@@ -38,18 +45,34 @@ export const CreateDnsModal = () => {
   const type = watch("type");
   const cloud = watch("cloud");
 
+  console.log({ type });
+
   useEffect(() => {
     if (cloud) {
       form.setValue("ttl", -1);
     }
   }, [cloud]);
 
-  const mutation = UsePostRecords();
+  const mutation = UsePostRecords({
+    onSuccess: () => {
+      toast.success("Records saved successfully");
+      form.reset();
+      setOpen(false);
+    },
+  });
 
+  // TODO: Remove console.log (For Demo)
   console.log({ errors });
 
+  // TODO: We can Enhance this
+  const handleChangetype = (type: PostRecordsRequest["type"]) => {
+    const name = form.getValues("name");
+    const ttl = form.getValues("ttl");
 
-  const handleChangetype = (type: string) => {
+    form.reset();
+    form.setValue("type", type);
+    form.setValue("ttl", ttl);
+    form.setValue("name", name);
     form.setValue("cloud", false);
 
     if (type === "A") {
@@ -69,8 +92,13 @@ export const CreateDnsModal = () => {
     }
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const onSubmit = (data: PostRecordsRequest) => {
-    console.log(data);
+    // TODO: Remove console.log (For Demo)
+    console.log("Submit Form:", data);
     mutation.mutate(data);
   };
 
@@ -86,7 +114,7 @@ export const CreateDnsModal = () => {
 
       <Separator />
 
-      <div className="flex flex-col py-2 gap-4">
+      <div className="flex flex-col py-2 gap-3">
         <div className="flex gap-4">
           <LabelContainer
             className="flex-1"
@@ -100,7 +128,7 @@ export const CreateDnsModal = () => {
               render={({ field }) => (
                 <Select
                   {...field}
-                  onValueChange={(value) => {
+                  onValueChange={(value: PostRecordsRequest["type"]) => {
                     field.onChange(value);
                     handleChangetype(value);
                   }}
@@ -135,7 +163,7 @@ export const CreateDnsModal = () => {
                 <div className="relative">
                   <BaseInput {...field} placeholder="Subdomain or @ for Root" />
                   <span className="absolute right-1.5 bg-primary-100 text-primary-800 py-1.5 px-3 rounded top-1/2 -translate-y-1/2 text-xs">
-                    .com
+                    domainname.com
                   </span>
                 </div>
               </LabelContainer>
@@ -185,14 +213,20 @@ export const CreateDnsModal = () => {
         </div>
 
         <SectionHandler control={control} form={form} type={type} />
+
+        <Separator />
       </div>
 
       <DialogFooter>
         {/* Cencel Button */}
-        <Button type="button" variant="ghost">
+        <Button type="button" variant="ghost" onClick={() => handleClose()}>
           Cancel
         </Button>
-        <Button type="button" isLoading={mutation.isPending} onClick={handleSubmit(onSubmit)}>
+        <Button
+          type="button"
+          isLoading={mutation.isPending}
+          onClick={handleSubmit(onSubmit)}
+        >
           Save
         </Button>
       </DialogFooter>

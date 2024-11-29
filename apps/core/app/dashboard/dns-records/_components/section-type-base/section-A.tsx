@@ -16,7 +16,6 @@ export const SectionA = (props: SectionNewRecordProps<"A">) => {
   const ipList = watch("value");
   const hasIpList = ipList?.length > 1;
 
-
   return (
     <div className="flex flex-col py-2 gap-4">
       <LabelInfo>
@@ -35,7 +34,7 @@ export const SectionA = (props: SectionNewRecordProps<"A">) => {
 
       <IpListField control={control} form={form} />
 
-      <Separator />
+      {(hasIpList || cloud) && <Separator />}
 
       {hasIpList && <LoadBalanceField control={control} form={form} />}
 
@@ -48,6 +47,7 @@ export const SectionA = (props: SectionNewRecordProps<"A">) => {
           )}
         />
       )}
+
     </div>
   );
 };
