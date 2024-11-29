@@ -24,6 +24,8 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { SectionHandler } from "./section-handler";
+import { useQueryClient } from "@repo/apis/providers/api-provider";
+import { getRecordsQueryKey } from "@repo/apis/core/v1/dns/{domain}/records/get/use-get-records";
 
 export interface CreateDnsModalProps {
   open: boolean;
@@ -45,6 +47,8 @@ export const CreateDnsModal = (props: CreateDnsModalProps) => {
   const type = watch("type");
   const cloud = watch("cloud");
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     if (cloud) {
       form.setValue("ttl", -1);
@@ -55,6 +59,10 @@ export const CreateDnsModal = (props: CreateDnsModalProps) => {
     onSuccess: () => {
       toast.success("Records saved successfully");
       form.reset();
+      queryClient.refetchQueries({
+        queryKey: getRecordsQueryKey(),
+      });
+
       setOpen(false);
     },
   });

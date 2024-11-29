@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { typeASchema, typeNSchema } from "../post/post-records.schema";
 
 // Request
 export const getRecordsRequestSchemaTransformed = z
@@ -14,6 +15,19 @@ const DnsRecordIpFilterModeSchema = z.object({
   order: z.string(),
 });
 
+export const postRecordsValueSchema = z.union([
+  typeASchema.shape.value,
+  typeNSchema.shape.value,
+  // TODO: add All type
+  // typeCAAschema.shape.value,
+  // typeCNAMESchema.shape.value,
+  // typeMXchema.shape.value,
+  // typeTXTchema.shape.value,
+  // typeTLSAschema.shape.value,
+  // typeSRVschema.shape.value,
+]);
+
+
 export const DataItemSchema = z
   .object({
     cloud: z.boolean(),
@@ -25,12 +39,12 @@ export const DataItemSchema = z
     order: z.string(),
     is_protected: z.boolean(),
     name: z.string(),
-    ttl: z.number().int(),
-    type: z.string(),
+    ttl: z.enum(["-1", "120", "180", "300", "600", "900", "1800", "3600", "7200", "18000", "43200", "86400", "172800", "432000"]),
+    type: z.enum(["A", "NS", "MX", "SRV", "TXT", "CNAME", "CAA", "TLSA"]),
     updated_at: z.string().datetime(),
     upstream_https: z.string(),
     usage: z.array(z.string()).nullable(),
-    value: z.array(z.any()).nullable(),
+    value: postRecordsValueSchema,
   })
   .transform((data) => data);
 

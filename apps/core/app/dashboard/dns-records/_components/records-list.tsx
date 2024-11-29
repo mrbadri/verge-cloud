@@ -1,61 +1,96 @@
 "use client";
 
 import { useGetRecords } from "@repo/apis/core/v1/dns/{domain}/records/get/use-get-records";
+import { BaseInput } from "@repo/ui/components/base-input";
+import { Button } from "@repo/ui/components/button";
+import { Separator } from "@repo/ui/components/separator";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@repo/ui/components/table";
+import { Search, SlidersHorizontal } from "lucide-react";
+import { BaseCard } from "../../_components/base-card";
+import { CloudSwitch } from "@repo/ui/components/cloudSwitch";
+import { Skeleton } from "@repo/ui/components/skeleton";
+import { Pencil, Trash2 } from "lucide-react";
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
+const DisplayObjects: React.FC<any> = ({ data }) => {
+  const dataArray = Array.isArray(data) ? data : [data];
+
+  return (
+    <div className="flex flex-col gap-2">
+      {dataArray.map((obj, index) => {
+        const keys = Object.keys(obj);
+
+        return (
+          <div key={index} className="flex items-center gap-1.5">
+            <div className="">
+              {keys.length > 0 ? obj[keys[0] as keyof typeof obj] : "N/A"}
+            </div>
+            {keys.slice(1).map((key) => (
+              <div
+                key={key}
+                className="bg-border text-xs py-1 px-1.5 text-muted-foreground rounded-md"
+              >
+                <span className="key font-semibold">{key}: </span>
+                <span className="value">{obj[key]}</span>
+              </div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const handleTtlShow = (ttl: string): string => {
+  if (ttl === "-1") return "Auto";
+
+  const seconds = Number(ttl);
+  const minutes = Math.floor(seconds / 60);
+  const days = Math.floor(minutes / (60 * 24));
+  const remainingMinutes = minutes % 60;
+
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days} day${days > 1 ? "s" : ""}`);
+  if (remainingMinutes > 0)
+    parts.push(`${remainingMinutes} minute${remainingMinutes > 1 ? "s" : ""}`);
+
+  return parts.join(" ") || "0 seconds";
+};
+
+const TableSkeleton = () => {
+  return (
+    <>
+      {[1, 2, 3, 5, 6, 7, 9, 10]?.map((item) => (
+        <TableRow key={item}>
+          <TableCell>
+            <Skeleton className="w-full h-8 rounded-md bg-border" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="w-full h-8 rounded-md bg-border" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="w-full h-8 rounded-md bg-border" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="w-full h-8 rounded-md bg-border" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="w-[100px] h-8 rounded-md bg-border" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="w-full h-8 rounded-md bg-border" />
+          </TableCell>
+        </TableRow>
+      ))}
+    </>
+  );
+};
 
 export const RecordsList = () => {
   const query = useGetRecords({
@@ -64,38 +99,93 @@ export const RecordsList = () => {
     },
   });
 
-  const { data } = query;
-
-  console.log("data" , data);
-  
+  // TODO: FORM DEMO
+  console.log("Record List:", query.data);
 
   return (
-    <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+    <BaseCard>
+      {/* Filter  Section */}
+      <div className="flex gap-2 mb-4">
+        {/* Search */}
+        <div className="relative flex-1">
+          <BaseInput placeholder="Search in Records" className="rounded-full" />
+          <span className="absolute right-1.5 py-1.5 px-3 top-1/2 text-muted-foreground -translate-y-1/2 text-xs">
+            <Search size={18} />
+          </span>
+        </div>
+        {/*  */}
+        <div className="flex gap-2">
+          <Button variant="ghost" disabled className="flex gap-1 bg-border">
+            <SlidersHorizontal size={16} />
+            <span>Type</span>
+          </Button>
+          <Button variant="ghost" disabled className="flex gap-1 bg-border">
+            <SlidersHorizontal size={16} />
+            <span>Cloud Service</span>
+          </Button>
+          <Separator orientation="vertical" />
+          <Button variant="ghost" disabled className="flex gap-1 bg-border">
+            <SlidersHorizontal size={16} />
+            <span>Sort</span>
+          </Button>
+        </div>
+      </div>
+
+      <Table>
+        <TableHeader className="bg-border py-4 rounded-full">
+          <TableRow>
+            <TableHead className="w-[100px]">Type</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Value</TableHead>
+            <TableHead>TTL</TableHead>
+            <TableHead className="w-[100px] min-w-[100px]">
+              Cloud Service
+            </TableHead>
+            <TableHead className="w-[100px]"></TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {query.isPending ? (
+            <TableSkeleton />
+          ) : (
+            <>
+              {query.data?.data.data?.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">
+                    <span className="bg-border rounded-lg p-2 text-muted-foreground">
+                      {item.type}
+                    </span>
+                  </TableCell>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>
+                    <DisplayObjects data={item.value} />
+                  </TableCell>
+                  <TableCell>{handleTtlShow(item.ttl)}</TableCell>
+                  <TableCell>
+                    <CloudSwitch defaultChecked={item.cloud} />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="link"
+                        className="flex gap-1 p-3 rounded-full bg-primary-100 text-primary-600"
+                      >
+                        <Pencil size={20} />
+                      </Button>
+                      <Button
+                        variant="link"
+                        className="flex gap-1 p-3 rounded-full bg-primary-100 text-primary-600"
+                      >
+                        <Trash2 size={20} />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </>
+          )}
+        </TableBody>
+      </Table>
+    </BaseCard>
   );
 };
