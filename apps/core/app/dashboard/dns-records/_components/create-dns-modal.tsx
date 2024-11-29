@@ -139,12 +139,12 @@ export const CreateDnsModal = (props: CreateDnsModalProps) => {
                   <SelectContent>
                     <SelectItem value="A">A</SelectItem>
                     <SelectItem value="NS">NS</SelectItem>
-                    <SelectItem value="CNAME">CNAME</SelectItem>
                     <SelectItem value="MX">MX</SelectItem>
                     <SelectItem value="SRV">SRV</SelectItem>
                     <SelectItem value="TXT">TXT</SelectItem>
-                    <SelectItem value="CAA">CAA</SelectItem>
-                    <SelectItem value="TLSA">TLSA</SelectItem>
+                    <SelectItem value="CNAME">CNAME (Coming Soon)</SelectItem>
+                    <SelectItem value="CAA">CAA (Coming Soon)</SelectItem>
+                    <SelectItem value="TLSA">TLSA (Coming Soon)</SelectItem>
                   </SelectContent>
                 </Select>
               )}
