@@ -7,7 +7,7 @@ let isRefreshing = false;
 let failedQueue: any[] = [];
 
 export const coreApi = axios.create({
-  baseURL: "http://37.152.182.32/", // You can set your base URL here
+  baseURL: "https://api.verx.lat/", // You can set your base URL here
   headers: {
     "Content-Type": "application/json",
   },

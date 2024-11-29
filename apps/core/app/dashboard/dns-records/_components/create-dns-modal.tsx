@@ -22,6 +22,7 @@ import { Separator } from "@repo/ui/components/separator";
 import { Controller, useForm } from "react-hook-form";
 import { SectionHandler } from "./section-handler";
 import { useEffect } from "react";
+import { UsePostRecords } from "@repo/apis/core/v1/dns/{domain}/records/post/use-post-records";
 
 export const CreateDnsModal = () => {
   const form = useForm<PostRecordsRequest>({
@@ -43,7 +44,10 @@ export const CreateDnsModal = () => {
     }
   }, [cloud]);
 
-  // console.log({ cloud });
+  const mutation = UsePostRecords();
+
+  console.log({ errors });
+
 
   const handleChangetype = (type: string) => {
     form.setValue("cloud", false);
@@ -67,7 +71,7 @@ export const CreateDnsModal = () => {
 
   const onSubmit = (data: PostRecordsRequest) => {
     console.log(data);
-    // handle your form submission here
+    mutation.mutate(data);
   };
 
   return (
@@ -188,7 +192,7 @@ export const CreateDnsModal = () => {
         <Button type="button" variant="ghost">
           Cancel
         </Button>
-        <Button type="button" onClick={handleSubmit(onSubmit)}>
+        <Button type="button" isLoading={mutation.isPending} onClick={handleSubmit(onSubmit)}>
           Save
         </Button>
       </DialogFooter>

@@ -40,7 +40,7 @@ export const IpListField = (props: IpListFieldProps) => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-start gap-4">
       <h2 className="font-semibold">Value</h2>
 
       {/* Section List Fields */}
