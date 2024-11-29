@@ -45,8 +45,6 @@ export const CreateDnsModal = (props: CreateDnsModalProps) => {
   const type = watch("type");
   const cloud = watch("cloud");
 
-  console.log({ type });
-
   useEffect(() => {
     if (cloud) {
       form.setValue("ttl", -1);
@@ -62,7 +60,7 @@ export const CreateDnsModal = (props: CreateDnsModalProps) => {
   });
 
   // TODO: Remove console.log (For Demo)
-  console.log({ errors });
+  console.log("Form Errors:", errors);
 
   // TODO: We can Enhance this
   const handleChangetype = (type: PostRecordsRequest["type"]) => {

@@ -32,3 +32,4 @@ export const postRecords = async (
 
   return { ...response, data: dataParsed };
 };
+
