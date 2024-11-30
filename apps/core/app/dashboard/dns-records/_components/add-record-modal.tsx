@@ -168,7 +168,7 @@ export const AddRecordModal = (props: AddRecordModalProps) => {
                     disabled={cloud}
                     {...field}
                     value={field.value ? String(field.value) : ""}
-                    onValueChange={(value) => field.onChange(+value)}
+                    onValueChange={(value) => field.onChange(value)}
                   />
                 </LabelContainer>
               )}
