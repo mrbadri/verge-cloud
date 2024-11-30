@@ -43,7 +43,7 @@ const baseSchema = z.object({
     "172800",
     "432000",
   ]),
-  upstream_https: z.string().optional(),
+  upstream_https: z.enum(["http", "https", "auto", "default"]),
 });
 
 export const typeASchema = baseSchema.extend({
