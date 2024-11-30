@@ -26,6 +26,9 @@ import { toast } from "sonner";
 import { SectionHandler } from "./section-handler";
 import { useQueryClient } from "@repo/apis/providers/api-provider";
 import { getRecordsQueryKey } from "@repo/apis/core/v1/dns/{domain}/records/get/use-get-records";
+import { TypeField } from "./fields/type-field";
+import { NameField } from "./fields/name-field";
+import { TTLField } from "./fields/ttl-field";
 
 export interface AddRecordModalProps {
   open: boolean;
@@ -122,40 +125,26 @@ export const AddRecordModal = (props: AddRecordModalProps) => {
 
       <div className="flex flex-col py-2 gap-3">
         <div className="flex gap-4">
-          <LabelContainer
-            className="flex-1"
-            label="Type"
-            error={errors.type?.message}
-            required
-          >
-            <Controller
-              name="type"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  onValueChange={(value: PostRecordsRequest["type"]) => {
+          <Controller
+            name="type"
+            control={control}
+            render={({ field, fieldState }) => (
+              <LabelContainer
+                className="flex-1"
+                label="Type"
+                error={fieldState.error?.message}
+                required
+              >
+                <TypeField
+                  value={field.value}
+                  onChange={(value: PostRecordsRequest["type"]) => {
                     field.onChange(value);
                     handleChangetype(value);
                   }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="A">A</SelectItem>
-                    <SelectItem value="NS">NS</SelectItem>
-                    <SelectItem value="MX">MX</SelectItem>
-                    <SelectItem value="SRV">SRV</SelectItem>
-                    <SelectItem value="TXT">TXT</SelectItem>
-                    <SelectItem value="CNAME">CNAME (Coming Soon)</SelectItem>
-                    <SelectItem value="CAA">CAA (Coming Soon)</SelectItem>
-                    <SelectItem value="TLSA">TLSA (Coming Soon)</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </LabelContainer>
+                />
+              </LabelContainer>
+            )}
+          />
 
           <Controller
             name="name"
@@ -166,12 +155,7 @@ export const AddRecordModal = (props: AddRecordModalProps) => {
                 label="Name"
                 error={fieldState.error?.message}
               >
-                <div className="relative">
-                  <BaseInput {...field} placeholder="Subdomain or @ for Root" />
-                  <span className="absolute right-1.5 bg-primary-100 text-primary-800 py-1.5 px-3 rounded top-1/2 -translate-y-1/2 text-xs">
-                    domainname.com
-                  </span>
-                </div>
+                <NameField {...field} />
               </LabelContainer>
             )}
           />
@@ -186,33 +170,12 @@ export const AddRecordModal = (props: AddRecordModalProps) => {
                 error={errors.ttl?.message}
                 required
               >
-                <Select
+                <TTLField
                   disabled={cloud}
                   {...field}
                   value={field.value ? String(field.value) : ""}
                   onValueChange={(value) => field.onChange(+value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {/* TODO: Check Auto Option with Owner */}
-                    <SelectItem value="-1">Auto</SelectItem>
-                    <SelectItem value="120">2 minutes</SelectItem>
-                    <SelectItem value="180">3 minutes</SelectItem>
-                    <SelectItem value="300">5 minutes</SelectItem>
-                    <SelectItem value="600">10 minutes</SelectItem>
-                    <SelectItem value="900">15 minutes</SelectItem>
-                    <SelectItem value="1800">30 minutes</SelectItem>
-                    <SelectItem value="3600">1 hour</SelectItem>
-                    <SelectItem value="7200">2 hours</SelectItem>
-                    <SelectItem value="18000">5 hours</SelectItem>
-                    <SelectItem value="43200">12 hours</SelectItem>
-                    <SelectItem value="86400">1 day</SelectItem>
-                    <SelectItem value="172800">2 days</SelectItem>
-                    <SelectItem value="432000">3 days</SelectItem>
-                  </SelectContent>
-                </Select>
+                />
               </LabelContainer>
             )}
           />
