@@ -1,6 +1,6 @@
 import { Skeleton } from "@repo/ui/components/skeleton";
 
-export const EditRecordModalLoading = () => {
+export const RecordModalLoading = () => {
   return (
     <div className="flex flex-col py-2 gap-3">
       <Skeleton className="w-full h-8 rounded-md bg-border" />

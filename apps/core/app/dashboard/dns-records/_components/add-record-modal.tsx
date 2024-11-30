@@ -100,7 +100,7 @@ export const AddRecordModal = (props: AddRecordModalProps) => {
 
   const onSubmit = (data: PostRecordsRequest) => {
     // TODO: Remove console.log (For Demo)
-    console.log("Submit Form:", data);
+    console.log("Submit Add Form:", data);
     mutation.mutate(data);
   };
 
@@ -181,12 +181,17 @@ export const AddRecordModal = (props: AddRecordModalProps) => {
         </div>
 
         <DialogFooter>
-          {/* Cencel Button */}
-          <Button type="button" variant="ghost" onClick={() => handleClose()}>
+          <Button
+            onClick={() => handleClose()}
+            disabled={mutation.isPending}
+            type="button"
+            variant="ghost"
+          >
             Cancel
           </Button>
           <Button
             type="button"
+            disabled={mutation.isPending}
             isLoading={mutation.isPending}
             onClick={handleSubmit(onSubmit)}
           >

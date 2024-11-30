@@ -24,7 +24,7 @@ import { TTLField } from "./fields/ttl-field";
 import { TypeField } from "./fields/type-field";
 import { SectionHandler } from "./section-handler";
 import { QueryWrapper } from "../../../../../../packages/ui/src/lib/query-wrapper";
-import { EditRecordModalLoading } from "./edit-record-modal.loading";
+import { RecordModalLoading } from "./record-modal.loading";
 
 export interface EditRecordModalProps {
   open: boolean;
@@ -71,7 +71,7 @@ export const EditRecordModal = (props: EditRecordModalProps) => {
 
   const mutation = usePutRecord({
     onSuccess: () => {
-      toast.success("Records saved successfully");
+      toast.success("Records  updated successfully");
       form.reset();
       queryClient.refetchQueries({
         queryKey: getRecordsQueryKey(),
@@ -79,6 +79,9 @@ export const EditRecordModal = (props: EditRecordModalProps) => {
 
       setOpen(false);
     },
+   onError: () => {
+      toast.error("Records  updated failed");
+    }, 
   });
 
   // TODO: Remove console.log (For Demo)
@@ -118,7 +121,7 @@ export const EditRecordModal = (props: EditRecordModalProps) => {
 
   const onSubmit = (data: PostRecordsRequest) => {
     // TODO: Remove console.log (For Demo)
-    console.log("Submit Form:", data);
+    console.log("Submit Edit Form:", data);
     mutation.mutate(data);
   };
 
@@ -138,7 +141,7 @@ export const EditRecordModal = (props: EditRecordModalProps) => {
         <QueryWrapper
           isLoading={query.isPending}
           isError={query.isError}
-          LoadingConponent={<EditRecordModalLoading />}
+          LoadingConponent={<RecordModalLoading />}
         >
           <div className="flex flex-col py-2 gap-3">
             <div className="flex gap-4">
@@ -205,12 +208,17 @@ export const EditRecordModal = (props: EditRecordModalProps) => {
         </QueryWrapper>
 
         <DialogFooter>
-          {/* Cencel Button */}
-          <Button type="button" variant="ghost" onClick={() => handleClose()}>
+          <Button
+            onClick={() => handleClose()}
+            disabled={mutation.isPending}
+            type="button"
+            variant="ghost"
+          >
             Cancel
           </Button>
           <Button
             type="button"
+            disabled={mutation.isPending}
             isLoading={mutation.isPending}
             onClick={handleSubmit(onSubmit)}
           >

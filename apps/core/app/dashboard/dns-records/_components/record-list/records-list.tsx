@@ -18,6 +18,7 @@ import { BaseCard } from "../../../_components/base-card";
 import { RecordListLoading } from "./record-list.loading";
 import { useState } from "react";
 import { EditRecordModal } from "../edit-record-modal";
+import { DeleteRecordModal } from "../delete-record-modal";
 
 const DisplayObjects: React.FC<any> = ({ data }) => {
   const dataArray = Array.isArray(data) ? data : [data];
@@ -66,7 +67,10 @@ const handleTtlShow = (ttl: string): string => {
 
 export const RecordsList = () => {
   const [editId, setEditId] = useState("");
+  const [deleteId, setDeleteId] = useState("");
+
   const [openEditRecord, setOpenEditRecord] = useState(false);
+  const [openDeleteRecord, setOpenDeleteRecord] = useState(false);
 
   const query = useGetRecords({
     params: {
@@ -77,6 +81,11 @@ export const RecordsList = () => {
   const handleEdit = (id: string) => {
     setEditId(id);
     setOpenEditRecord(true);
+  };
+
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
+    setOpenDeleteRecord(true);
   };
 
   // TODO: FORM DEMO
@@ -159,6 +168,9 @@ export const RecordsList = () => {
                       <Button
                         variant="link"
                         className="flex gap-1 p-3 rounded-full bg-primary-100 text-primary-600"
+                        onClick={() => {
+                          handleDelete(item.id);
+                        }}
                       >
                         <Trash2 size={20} />
                       </Button>
@@ -176,6 +188,13 @@ export const RecordsList = () => {
         open={openEditRecord}
         setOpen={setOpenEditRecord}
         id={editId}
+      />
+
+      {/* Delete Record Modal */}
+      <DeleteRecordModal
+        open={openDeleteRecord}
+        setOpen={setOpenDeleteRecord}
+        id={deleteId}
       />
     </BaseCard>
   );
