@@ -2,8 +2,8 @@ export interface QueryWrapperProps {
   children: React.ReactNode;
   isLoading: boolean;
   isError: boolean;
-  LoadingConponent: React.ReactNode;
-  ErrorComponent: React.ReactNode;
+  LoadingConponent?: React.ReactNode;
+  ErrorComponent?: React.ReactNode;
 }
 
 export const QueryWrapper = (props: QueryWrapperProps) => {

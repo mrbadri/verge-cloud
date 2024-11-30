@@ -7,27 +7,42 @@ const IPSchema = z.object({
       /^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$/,
       "Invalid IPv4 address",
     ),
-    weight: z
-      .number({ message: "Weight must number" })
-      .int()
-      .min(0)
-      .max(1000)
-      .nullable(), 
-  country: z.string().nullable().optional(), 
-  port: z.number().int().min(1).max(65535).nullable().optional(), 
+  weight: z
+    .number({ message: "Weight must number" })
+    .int()
+    .min(0)
+    .max(1000)
+    .nullable(),
+  country: z.string().nullable().optional(),
+  port: z.number().int().min(1).max(65535).nullable().optional(),
 });
 
 const baseSchema = z.object({
   cloud: z.boolean().optional(),
   ip_filter_mode: z
     .object({
-      count: z.string(),
-      geo_filter: z.string(),
-      order: z.string(),
+      count: z.enum(["single", "multi"]),
+      geo_filter: z.enum(["none", "location", "country"]),
+      order: z.enum(["none", "weighted", "rr"]),
     })
     .optional(),
   name: z.string(),
-  ttl: z.number(),
+  ttl: z.enum([
+    "-1",
+    "120",
+    "180",
+    "300",
+    "600",
+    "900",
+    "1800",
+    "3600",
+    "7200",
+    "18000",
+    "43200",
+    "86400",
+    "172800",
+    "432000",
+  ]),
   upstream_https: z.string().optional(),
 });
 

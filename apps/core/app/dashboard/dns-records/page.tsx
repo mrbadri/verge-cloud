@@ -7,7 +7,7 @@ import { AddRecordModal } from "./_components/add-record-modal";
 import { RecordsList } from "./_components/record-list/records-list";
 
 const DNSRecordsPage = () => {
-  const [open, setOpen] = useState(false);
+  const [openNewRecord, setOpenNewRecord] = useState(false);
 
   return (
     <div className="py-6">
@@ -17,15 +17,13 @@ const DNSRecordsPage = () => {
           need to transfer your domain's DNS records to VergeCloud's
         </span>
 
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button>New Record</Button>
-          </DialogTrigger>
-          <AddRecordModal open={open} setOpen={setOpen} />
-        </Dialog>
+        <Button onClick={() => setOpenNewRecord(true)}>New Record</Button>
       </div>
 
       <RecordsList />
+
+      {/* Add New Record Modal */}
+      <AddRecordModal open={openNewRecord} setOpen={setOpenNewRecord} />
     </div>
   );
 };

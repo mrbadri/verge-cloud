@@ -16,6 +16,8 @@ import {
 import { Pencil, Search, SlidersHorizontal, Trash2 } from "lucide-react";
 import { BaseCard } from "../../../_components/base-card";
 import { RecordListLoading } from "./record-list.loading";
+import { useState } from "react";
+import { EditRecordModal } from "../edit-record-modal";
 
 const DisplayObjects: React.FC<any> = ({ data }) => {
   const dataArray = Array.isArray(data) ? data : [data];
@@ -63,11 +65,19 @@ const handleTtlShow = (ttl: string): string => {
 };
 
 export const RecordsList = () => {
+  const [editId, setEditId] = useState("");
+  const [openEditRecord, setOpenEditRecord] = useState(false);
+
   const query = useGetRecords({
     params: {
       keyPayload: "test",
     },
   });
+
+  const handleEdit = (id: string) => {
+    setEditId(id);
+    setOpenEditRecord(true);
+  };
 
   // TODO: FORM DEMO
   console.log("Record List:", query.data);
@@ -140,6 +150,9 @@ export const RecordsList = () => {
                       <Button
                         variant="link"
                         className="flex gap-1 p-3 rounded-full bg-primary-100 text-primary-600"
+                        onClick={() => {
+                          handleEdit(item.id);
+                        }}
                       >
                         <Pencil size={20} />
                       </Button>
@@ -157,6 +170,13 @@ export const RecordsList = () => {
           )}
         </TableBody>
       </Table>
+
+      {/* Edit Record Modal */}
+      <EditRecordModal
+        open={openEditRecord}
+        setOpen={setOpenEditRecord}
+        id={editId}
+      />
     </BaseCard>
   );
 };
