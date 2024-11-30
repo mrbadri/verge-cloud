@@ -191,7 +191,7 @@ export const AddRecordModal = (props: AddRecordModalProps) => {
           </Button>
           <Button
             type="button"
-            disabled={mutation.isPending}
+            // disabled={mutation.isPending}
             isLoading={mutation.isPending}
             onClick={handleSubmit(onSubmit)}
           >
